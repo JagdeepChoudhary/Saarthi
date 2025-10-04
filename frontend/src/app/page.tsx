@@ -1,102 +1,364 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  GraduationCap,
+  Building2,
+  Users,
+  ArrowRight,
+  Briefcase,
+  Target,
+  Shield,
+  Zap,
+  BarChart3,
+  UserCheck,
+} from "lucide-react";
+import Link from "next/link";
+
+const features = [
+  {
+    icon: Target,
+    title: "Smart Matching",
+    description:
+      "AI-powered job matching connects students with opportunities that align with their skills and aspirations.",
+  },
+  {
+    icon: Shield,
+    title: "Verified Profiles",
+    description:
+      "Comprehensive verification system ensures authentic profiles and trustworthy connections.",
+  },
+  {
+    icon: BarChart3,
+    title: "Real-time Analytics",
+    description:
+      "Track applications, monitor progress, and gain insights with powerful analytics dashboards.",
+  },
+  {
+    icon: Zap,
+    title: "Instant Updates",
+    description:
+      "Stay informed with real-time notifications about applications, interviews, and opportunities.",
+  },
+];
+
+const stats = [
+  { value: "10,000+", label: "Active Students" },
+  { value: "500+", label: "Partner Companies" },
+  { value: "85%", label: "Placement Rate" },
+  { value: "2,500+", label: "Success Stories" },
+];
+
+const roles = [
+  {
+    icon: GraduationCap,
+    title: "Students",
+    description:
+      "Discover opportunities, track applications, and launch your career",
+    color: "bg-blue-50 text-blue-600",
+  },
+  {
+    icon: Building2,
+    title: "Placement Cell",
+    description: "Manage campus recruitment and student placements efficiently",
+    color: "bg-purple-50 text-purple-600",
+  },
+  {
+    icon: UserCheck,
+    title: "Mentors",
+    description: "Guide students and help them achieve their career goals",
+    color: "bg-green-50 text-green-600",
+  },
+  {
+    icon: Users,
+    title: "Supervisors",
+    description:
+      "Oversee placement activities and monitor institutional progress",
+    color: "bg-orange-50 text-orange-600",
+  },
+  {
+    icon: Briefcase,
+    title: "Recruiters",
+    description: "Find top talent and streamline your hiring process",
+    color: "bg-pink-50 text-pink-600",
+  },
+];
+
+export default function LandingPage() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+          <div className="flex items-center gap-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground">
+              <GraduationCap className="h-6 w-6 text-background" />
+            </div>
+            <span className="text-xl font-bold">SAARTHI</span>
+          </div>
+          <nav className="hidden items-center gap-6 md:flex">
+            <Link
+              href="#features"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              Features
+            </Link>
+            <Link
+              href="#roles"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              For Teams
+            </Link>
+            <Link
+              href="#about"
+              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+            >
+              About
+            </Link>
+          </nav>
+          <Link href="/login">
+            <Button size="lg" className="gap-2">
+              Get Started
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </header>
+
+      {/* Hero Section */}
+      <section className="container mx-auto px-4 py-20 md:py-32">
+        <div className="mx-auto max-w-4xl text-center">
+          <Badge variant="secondary" className="mb-6 gap-2 px-4 py-2 text-sm">
+            <div className="h-2 w-2 rounded-full bg-green-500" />
+            Trusted by 100+ institutions nationwide
+          </Badge>
+          <h1 className="mb-6 text-balance text-5xl font-bold leading-tight tracking-tight md:text-6xl lg:text-7xl">
+            Connect Talent with Opportunity
+          </h1>
+          <p className="mb-10 text-balance text-lg text-muted-foreground md:text-xl">
+            The complete platform for internships and placements. Streamline
+            recruitment, empower students, and build successful careers with our
+            industry-leading portal.
+          </p>
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link href="/login">
+              <Button size="lg" className="w-full gap-2 sm:w-auto">
+                Start Your Journey
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full sm:w-auto bg-transparent"
+            >
+              Watch Demo
+            </Button>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="mx-auto mt-20 grid max-w-5xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {stats.map((stat, idx) => (
+            <div key={idx} className="text-center">
+              <div className="mb-2 text-4xl font-bold">{stat.value}</div>
+              <div className="text-sm text-muted-foreground">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="border-t bg-muted/30 py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto mb-16 max-w-2xl text-center">
+            <h2 className="mb-4 text-balance text-3xl font-bold md:text-4xl">
+              Everything you need to succeed
+            </h2>
+            <p className="text-balance text-lg text-muted-foreground">
+              Powerful features designed to make placements seamless for
+              everyone involved
+            </p>
+          </div>
+          <div className="mx-auto grid max-w-6xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {features.map((feature, idx) => (
+              <Card
+                key={idx}
+                className="border-none shadow-sm transition-shadow hover:shadow-md"
+              >
+                <CardContent className="pt-6">
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-foreground">
+                    <feature.icon className="h-6 w-6 text-background" />
+                  </div>
+                  <h3 className="mb-2 font-semibold">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {feature.description}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Roles Section */}
+      <section id="roles" className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto mb-16 max-w-2xl text-center">
+            <h2 className="mb-4 text-balance text-3xl font-bold md:text-4xl">
+              Built for every stakeholder
+            </h2>
+            <p className="text-balance text-lg text-muted-foreground">
+              Tailored experiences for students, institutions, and recruiters
+            </p>
+          </div>
+          <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {roles.map((role, idx) => (
+              <Card
+                key={idx}
+                className="group border-none shadow-sm transition-all hover:shadow-lg"
+              >
+                <CardContent className="pt-6">
+                  <div
+                    className={`mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl ${role.color}`}
+                  >
+                    <role.icon className="h-7 w-7" />
+                  </div>
+                  <h3 className="mb-2 text-xl font-semibold">{role.title}</h3>
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    {role.description}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    className="group-hover:gap-2 p-0 transition-all"
+                  >
+                    Learn more
+                    <ArrowRight className="h-4 w-4 opacity-0 transition-all group-hover:opacity-100" />
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="border-t bg-foreground py-20 text-background">
+        <div className="container mx-auto px-4 text-center">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="mb-6 text-balance text-3xl font-bold md:text-4xl">
+              Ready to transform your placement process?
+            </h2>
+            <p className="mb-8 text-balance text-lg text-background/80">
+              Join thousands of students and hundreds of institutions already
+              using SAARTHI
+            </p>
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link href="/login">
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="w-full gap-2 sm:w-auto"
+                >
+                  Get Started Free
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full border-background/20 bg-transparent text-background hover:bg-background/10 sm:w-auto"
+              >
+                Contact Sales
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <div className="mb-4 flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground">
+                  <GraduationCap className="h-5 w-5 text-background" />
+                </div>
+                <span className="font-bold">SAARTHI</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Connecting talent with opportunity across India&#39;s leading
+                institutions.
+              </p>
+            </div>
+            <div>
+              <h4 className="mb-4 font-semibold">Product</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Security
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="mb-4 font-semibold">Company</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Careers
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="mb-4 font-semibold">Support</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Help Center
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Privacy
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="mt-12 border-t pt-8 text-center text-sm text-muted-foreground">
+            © 2025 SAARTHI. All rights reserved.
+          </div>
+        </div>
       </footer>
     </div>
   );
