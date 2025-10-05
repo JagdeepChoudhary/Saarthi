@@ -36,7 +36,7 @@ const roles = [
     id: "placement",
     label: "Placement Cell",
     icon: Building2,
-    path: "/placement",
+    path: "/placementcell",
     color: "hover:border-purple-500",
   },
   {

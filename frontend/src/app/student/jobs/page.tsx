@@ -12,6 +12,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Briefcase, MapPin, Clock, Search } from "lucide-react";
 
 const mockJobs = [
@@ -81,17 +88,21 @@ export default function Jobs() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <select
-          className="px-3 py-2 rounded-md border border-muted-foreground"
+        <Select
           value={filterType}
-          onChange={(e) =>
-            setFilterType(e.target.value as "All" | "Internship" | "Full-time")
+          onValueChange={(value: "All" | "Internship" | "Full-time") =>
+            setFilterType(value)
           }
         >
-          <option value="All">All Types</option>
-          <option value="Internship">Internship</option>
-          <option value="Full-time">Full-time</option>
-        </select>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select Type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="All">All Types</SelectItem>
+            <SelectItem value="Internship">Internship</SelectItem>
+            <SelectItem value="Full-time">Full-time</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Jobs */}

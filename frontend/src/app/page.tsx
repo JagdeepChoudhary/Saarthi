@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import RoleSelector from "@/components/role-selector";
 import {
   GraduationCap,
   Building2,
@@ -86,6 +87,14 @@ const roles = [
   },
 ];
 
+const roleDeepLinks = [
+  { key: "student", href: "/student" },
+  { key: "placement", href: "/placementcell" },
+  { key: "mentor", href: "/mentor" },
+  { key: "supervisor", href: "/supervisor" },
+  { key: "recruiter", href: "/recruiter" },
+];
+
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
@@ -118,7 +127,7 @@ export default function LandingPage() {
               About
             </Link>
           </nav>
-          <Link href="/login">
+          <Link href="#choose-role">
             <Button size="lg" className="gap-2">
               Get Started
               <ArrowRight className="h-4 w-4" />
@@ -143,7 +152,7 @@ export default function LandingPage() {
             industry-leading portal.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link href="/login">
+            <Link href="#choose-role">
               <Button size="lg" className="w-full gap-2 sm:w-auto">
                 Start Your Journey
                 <ArrowRight className="h-4 w-4" />
@@ -159,6 +168,11 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* Role Selector */}
+        <div className="mt-10">
+          <RoleSelector />
+        </div>
+
         {/* Stats */}
         <div className="mx-auto mt-20 grid max-w-5xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat, idx) => (
@@ -167,6 +181,19 @@ export default function LandingPage() {
               <div className="text-sm text-muted-foreground">{stat.label}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Welcome to SAARTHI Section */}
+      <section id="choose-role" className="container mx-auto px-4 py-12">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="mb-3 text-3xl font-bold md:text-4xl">
+            Welcome to SAARTHI
+          </h2>
+          <p className="text-muted-foreground">Choose your role to continue</p>
+        </div>
+        <div className="mx-auto mt-8 max-w-5xl">
+          <RoleSelector />
         </div>
       </section>
 
@@ -184,20 +211,19 @@ export default function LandingPage() {
           </div>
           <div className="mx-auto grid max-w-6xl gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((feature, idx) => (
-              <Card
-                key={idx}
-                className="border-none shadow-sm transition-shadow hover:shadow-md"
-              >
-                <CardContent className="pt-6">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-foreground">
-                    <feature.icon className="h-6 w-6 text-background" />
-                  </div>
-                  <h3 className="mb-2 font-semibold">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
+              <div key={idx}>
+                <Card className="border-none shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
+                  <CardContent className="pt-6">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-foreground">
+                      <feature.icon className="h-6 w-6 text-background" />
+                    </div>
+                    <h3 className="mb-2 font-semibold">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {feature.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
             ))}
           </div>
         </div>
@@ -215,31 +241,40 @@ export default function LandingPage() {
             </p>
           </div>
           <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {roles.map((role, idx) => (
-              <Card
-                key={idx}
-                className="group border-none shadow-sm transition-all hover:shadow-lg"
-              >
-                <CardContent className="pt-6">
-                  <div
-                    className={`mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl ${role.color}`}
-                  >
-                    <role.icon className="h-7 w-7" />
-                  </div>
-                  <h3 className="mb-2 text-xl font-semibold">{role.title}</h3>
-                  <p className="mb-4 text-sm text-muted-foreground">
-                    {role.description}
-                  </p>
-                  <Button
-                    variant="ghost"
-                    className="group-hover:gap-2 p-0 transition-all"
-                  >
-                    Learn more
-                    <ArrowRight className="h-4 w-4 opacity-0 transition-all group-hover:opacity-100" />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+            {roles.map((role, idx) => {
+              const link = roleDeepLinks[idx] ?? { href: "/login" };
+              return (
+                <div key={idx}>
+                  <Card className="group border-none shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
+                    <CardContent className="pt-6">
+                      <div
+                        className={`mb-4 inline-flex h-14 w-14 items-center justify-center rounded-xl ${role.color}`}
+                      >
+                        <role.icon className="h-7 w-7" />
+                      </div>
+                      <h3 className="mb-2 text-xl font-semibold">
+                        {role.title}
+                      </h3>
+                      <p className="mb-4 text-sm text-muted-foreground">
+                        {role.description}
+                      </p>
+                      <Link
+                        href={link.href}
+                        className="inline-flex items-center"
+                      >
+                        <Button
+                          variant="ghost"
+                          className="group-hover:gap-2 p-0 transition-all"
+                        >
+                          Continue as {role.title}
+                          <ArrowRight className="h-4 w-4 opacity-0 transition-all group-hover:opacity-100" />
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -256,7 +291,7 @@ export default function LandingPage() {
               using SAARTHI
             </p>
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Link href="/login">
+              <Link href="#choose-role">
                 <Button
                   size="lg"
                   variant="secondary"
