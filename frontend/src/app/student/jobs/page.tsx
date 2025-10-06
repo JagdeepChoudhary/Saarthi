@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { ApplyJobModal } from "@/components/apply-job-modal";
+import { toast } from "sonner";
 
 import {
   Card,
@@ -59,6 +61,10 @@ export default function Jobs() {
   const [filterType, setFilterType] = useState<
     "All" | "Internship" | "Full-time"
   >("All");
+  const [applyOpen, setApplyOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<
+    (typeof mockJobs)[number] | null
+  >(null);
 
   const filteredJobs = mockJobs.filter((job) => {
     const matchesSearch =
@@ -149,13 +155,32 @@ export default function Jobs() {
                       Deadline: {job.deadline}
                     </p>
                   </div>
-                  <Button>Apply Now</Button>
+                  <Button
+                    onClick={() => {
+                      setSelectedJob(job);
+                      setApplyOpen(true);
+                    }}
+                  >
+                    Apply Now
+                  </Button>
                 </div>
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {/* Apply Job Modal */}
+      <ApplyJobModal
+        open={applyOpen}
+        onOpenChange={setApplyOpen}
+        job={selectedJob}
+        onSubmitted={() =>
+          toast.success("Application created", {
+            description: `Applied to ${selectedJob?.title} at ${selectedJob?.company}`,
+          })
+        }
+      />
     </div>
   );
 }

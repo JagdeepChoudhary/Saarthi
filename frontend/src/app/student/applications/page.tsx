@@ -62,6 +62,31 @@ export default function Applications() {
     return mockApplications.filter((app) => app.status === status);
   };
 
+  const MobileList = ({ status }: { status: string }) => {
+    const list = filterByStatus(status);
+    return (
+      <div className="grid gap-3 md:hidden">
+        {list.map((app) => (
+          <div
+            key={app.id}
+            className="rounded-lg border p-4 shadow-sm bg-background"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="font-semibold">{app.position}</p>
+                <p className="text-sm text-muted-foreground">{app.company}</p>
+              </div>
+              <Badge variant={getStatusVariant(app.status)}>{app.status}</Badge>
+            </div>
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+              <span>Applied: {app.appliedDate}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="space-y-6">
@@ -95,32 +120,38 @@ export default function Applications() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Company</TableHead>
-                        <TableHead>Position</TableHead>
-                        <TableHead>Applied Date</TableHead>
-                        <TableHead>Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filterByStatus(status).map((app) => (
-                        <TableRow key={app.id}>
-                          <TableCell className="font-medium">
-                            {app.company}
-                          </TableCell>
-                          <TableCell>{app.position}</TableCell>
-                          <TableCell>{app.appliedDate}</TableCell>
-                          <TableCell>
-                            <Badge variant={getStatusVariant(app.status)}>
-                              {app.status}
-                            </Badge>
-                          </TableCell>
+                  {/* Mobile cards */}
+                  <MobileList status={status} />
+
+                  {/* Desktop table */}
+                  <div className="hidden md:block w-full overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Company</TableHead>
+                          <TableHead>Position</TableHead>
+                          <TableHead>Applied Date</TableHead>
+                          <TableHead>Status</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {filterByStatus(status).map((app) => (
+                          <TableRow key={app.id}>
+                            <TableCell className="font-medium">
+                              {app.company}
+                            </TableCell>
+                            <TableCell>{app.position}</TableCell>
+                            <TableCell>{app.appliedDate}</TableCell>
+                            <TableCell>
+                              <Badge variant={getStatusVariant(app.status)}>
+                                {app.status}
+                              </Badge>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
