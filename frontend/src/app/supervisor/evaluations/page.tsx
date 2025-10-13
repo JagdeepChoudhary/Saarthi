@@ -1,6 +1,5 @@
 "use client";
 
-import { DashboardLayout } from "@/components/DashboardLayout";
 import {
   Card,
   CardContent,
@@ -99,221 +98,276 @@ export default function Evaluations() {
   };
 
   return (
-    <DashboardLayout role="supervisor">
-      <div className="space-y-4 sm:space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">
-              Intern Evaluations
-            </h1>
-            <p className="text-sm sm:text-base text-muted-foreground">
-              Evaluate intern performance and provide feedback
-            </p>
-          </div>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                New Evaluation
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Submit Evaluation</DialogTitle>
-                <DialogDescription>
-                  Evaluate intern performance and provide detailed feedback
-                </DialogDescription>
-              </DialogHeader>
+    <div className="space-y-4 sm:space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold">Intern Evaluations</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">
+            Evaluate intern performance and provide feedback
+          </p>
+        </div>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size="sm">
+              <Plus className="h-4 w-4 mr-2" />
+              New Evaluation
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Submit Evaluation</DialogTitle>
+              <DialogDescription>
+                Evaluate intern performance and provide detailed feedback
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Select Intern</Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose an intern" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="alice">Alice Johnson</SelectItem>
+                    <SelectItem value="bob">Bob Williams</SelectItem>
+                    <SelectItem value="carol">Carol Davis</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Rating Sliders */}
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Select Intern</Label>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose an intern" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="alice">Alice Johnson</SelectItem>
-                      <SelectItem value="bob">Bob Williams</SelectItem>
-                      <SelectItem value="carol">Carol Davis</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Rating Sliders */}
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label>Technical Skills</Label>
-                      <span className="text-sm font-medium">
-                        {technicalSkills[0]}/5
-                      </span>
-                    </div>
-                    <Slider
-                      value={technicalSkills}
-                      onValueChange={setTechnicalSkills}
-                      max={5}
-                      step={0.5}
-                      className="w-full"
-                    />
+                  <div className="flex items-center justify-between">
+                    <Label>Technical Skills</Label>
+                    <span className="text-sm font-medium">
+                      {technicalSkills[0]}/5
+                    </span>
                   </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label>Communication & Teamwork</Label>
-                      <span className="text-sm font-medium">
-                        {communication[0]}/5
-                      </span>
-                    </div>
-                    <Slider
-                      value={communication}
-                      onValueChange={setCommunication}
-                      max={5}
-                      step={0.5}
-                      className="w-full"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label>Work Ethic</Label>
-                      <span className="text-sm font-medium">
-                        {workEthic[0]}/5
-                      </span>
-                    </div>
-                    <Slider
-                      value={workEthic}
-                      onValueChange={setWorkEthic}
-                      max={5}
-                      step={0.5}
-                      className="w-full"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label>Problem Solving</Label>
-                      <span className="text-sm font-medium">
-                        {problemSolving[0]}/5
-                      </span>
-                    </div>
-                    <Slider
-                      value={problemSolving}
-                      onValueChange={setProblemSolving}
-                      max={5}
-                      step={0.5}
-                      className="w-full"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Strengths</Label>
-                  <Textarea placeholder="Highlight key strengths..." rows={3} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Areas for Improvement</Label>
-                  <Textarea
-                    placeholder="Suggest areas for growth..."
-                    rows={3}
+                  <Slider
+                    value={technicalSkills}
+                    onValueChange={setTechnicalSkills}
+                    max={5}
+                    step={0.5}
+                    className="w-full"
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <Label>Overall Feedback</Label>
-                  <Textarea
-                    placeholder="Provide general feedback..."
-                    rows={3}
+                  <div className="flex items-center justify-between">
+                    <Label>Communication & Teamwork</Label>
+                    <span className="text-sm font-medium">
+                      {communication[0]}/5
+                    </span>
+                  </div>
+                  <Slider
+                    value={communication}
+                    onValueChange={setCommunication}
+                    max={5}
+                    step={0.5}
+                    className="w-full"
                   />
                 </div>
-                <Button className="w-full">Submit Evaluation</Button>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
 
-        {/* Stats Cards - 2 per row on mobile */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-xs sm:text-sm font-medium">
-                  Total
-                </CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl sm:text-2xl font-bold">
-                {mockEvaluations.length}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-xs sm:text-sm font-medium">
-                  Completed
-                </CardTitle>
-                <CheckCircle className="h-4 w-4 text-green-600" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl sm:text-2xl font-bold">
-                {mockEvaluations.filter((e) => e.status === "Completed").length}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-xs sm:text-sm font-medium">
-                  Pending
-                </CardTitle>
-                <Clock className="h-4 w-4 text-orange-600" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl sm:text-2xl font-bold">
-                {mockEvaluations.filter((e) => e.status === "Pending").length}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-xs sm:text-sm font-medium">
-                  Avg Rating
-                </CardTitle>
-                <Star className="h-4 w-4 text-yellow-600" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-xl sm:text-2xl font-bold">
-                {(
-                  mockEvaluations
-                    .filter((e) => e.rating)
-                    .reduce((sum, e) => sum + (e.rating || 0), 0) /
-                  mockEvaluations.filter((e) => e.rating).length
-                ).toFixed(1)}
-                /5
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Work Ethic</Label>
+                    <span className="text-sm font-medium">
+                      {workEthic[0]}/5
+                    </span>
+                  </div>
+                  <Slider
+                    value={workEthic}
+                    onValueChange={setWorkEthic}
+                    max={5}
+                    step={0.5}
+                    className="w-full"
+                  />
+                </div>
 
-        {/* Evaluation Cards - Mobile View */}
-        <div className="lg:hidden space-y-3">
-          {mockEvaluations.map((evaluation) => (
-            <Card key={evaluation.id}>
-              <CardContent className="pt-6">
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="font-semibold">{evaluation.internName}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {evaluation.project}
-                      </p>
-                    </div>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Problem Solving</Label>
+                    <span className="text-sm font-medium">
+                      {problemSolving[0]}/5
+                    </span>
+                  </div>
+                  <Slider
+                    value={problemSolving}
+                    onValueChange={setProblemSolving}
+                    max={5}
+                    step={0.5}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Strengths</Label>
+                <Textarea placeholder="Highlight key strengths..." rows={3} />
+              </div>
+              <div className="space-y-2">
+                <Label>Areas for Improvement</Label>
+                <Textarea placeholder="Suggest areas for growth..." rows={3} />
+              </div>
+              <div className="space-y-2">
+                <Label>Overall Feedback</Label>
+                <Textarea placeholder="Provide general feedback..." rows={3} />
+              </div>
+              <Button className="w-full">Submit Evaluation</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+
+      {/* Stats Cards - 2 per row on mobile */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xs sm:text-sm font-medium">
+                Total
+              </CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl sm:text-2xl font-bold">
+              {mockEvaluations.length}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xs sm:text-sm font-medium">
+                Completed
+              </CardTitle>
+              <CheckCircle className="h-4 w-4 text-green-600" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl sm:text-2xl font-bold">
+              {mockEvaluations.filter((e) => e.status === "Completed").length}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xs sm:text-sm font-medium">
+                Pending
+              </CardTitle>
+              <Clock className="h-4 w-4 text-orange-600" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl sm:text-2xl font-bold">
+              {mockEvaluations.filter((e) => e.status === "Pending").length}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xs sm:text-sm font-medium">
+                Avg Rating
+              </CardTitle>
+              <Star className="h-4 w-4 text-yellow-600" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-xl sm:text-2xl font-bold">
+              {(
+                mockEvaluations
+                  .filter((e) => e.rating)
+                  .reduce((sum, e) => sum + (e.rating || 0), 0) /
+                mockEvaluations.filter((e) => e.rating).length
+              ).toFixed(1)}
+              /5
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Evaluation Cards - Mobile View */}
+      <div className="lg:hidden space-y-3">
+        {mockEvaluations.map((evaluation) => (
+          <Card key={evaluation.id}>
+            <CardContent className="pt-6">
+              <div className="space-y-3">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="font-semibold">{evaluation.internName}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {evaluation.project}
+                    </p>
+                  </div>
+                  <Badge
+                    variant={
+                      evaluation.status === "Completed"
+                        ? "default"
+                        : "secondary"
+                    }
+                  >
+                    {evaluation.status}
+                  </Badge>
+                </div>
+                {evaluation.rating && (
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Rating</p>
+                    {renderStars(evaluation.rating)}
+                  </div>
+                )}
+                {evaluation.evaluatedDate && (
+                  <p className="text-sm text-muted-foreground">
+                    Evaluated: {evaluation.evaluatedDate}
+                  </p>
+                )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full bg-transparent"
+                >
+                  View Details
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Table - Desktop View */}
+      <Card className="hidden lg:block">
+        <CardHeader>
+          <CardTitle>Evaluation History</CardTitle>
+          <CardDescription>View all submitted evaluations</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Intern Name</TableHead>
+                <TableHead>Project</TableHead>
+                <TableHead>Rating</TableHead>
+                <TableHead>Evaluated Date</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {mockEvaluations.map((evaluation) => (
+                <TableRow key={evaluation.id}>
+                  <TableCell className="font-medium">
+                    {evaluation.internName}
+                  </TableCell>
+                  <TableCell>{evaluation.project}</TableCell>
+                  <TableCell>
+                    {evaluation.rating ? renderStars(evaluation.rating) : "-"}
+                  </TableCell>
+                  <TableCell>{evaluation.evaluatedDate || "-"}</TableCell>
+                  <TableCell>
                     <Badge
                       variant={
                         evaluation.status === "Completed"
@@ -323,83 +377,18 @@ export default function Evaluations() {
                     >
                       {evaluation.status}
                     </Badge>
-                  </div>
-                  {evaluation.rating && (
-                    <div className="space-y-1">
-                      <p className="text-sm text-muted-foreground">Rating</p>
-                      {renderStars(evaluation.rating)}
-                    </div>
-                  )}
-                  {evaluation.evaluatedDate && (
-                    <p className="text-sm text-muted-foreground">
-                      Evaluated: {evaluation.evaluatedDate}
-                    </p>
-                  )}
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="w-full bg-transparent"
-                  >
-                    View Details
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Table - Desktop View */}
-        <Card className="hidden lg:block">
-          <CardHeader>
-            <CardTitle>Evaluation History</CardTitle>
-            <CardDescription>View all submitted evaluations</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Intern Name</TableHead>
-                  <TableHead>Project</TableHead>
-                  <TableHead>Rating</TableHead>
-                  <TableHead>Evaluated Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
+                  </TableCell>
+                  <TableCell>
+                    <Button size="sm" variant="outline">
+                      View Details
+                    </Button>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {mockEvaluations.map((evaluation) => (
-                  <TableRow key={evaluation.id}>
-                    <TableCell className="font-medium">
-                      {evaluation.internName}
-                    </TableCell>
-                    <TableCell>{evaluation.project}</TableCell>
-                    <TableCell>
-                      {evaluation.rating ? renderStars(evaluation.rating) : "-"}
-                    </TableCell>
-                    <TableCell>{evaluation.evaluatedDate || "-"}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          evaluation.status === "Completed"
-                            ? "default"
-                            : "secondary"
-                        }
-                      >
-                        {evaluation.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Button size="sm" variant="outline">
-                        View Details
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div>
-    </DashboardLayout>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

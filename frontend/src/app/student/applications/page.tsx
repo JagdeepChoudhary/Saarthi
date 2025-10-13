@@ -1,163 +1,139 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Clock, CheckCircle, XCircle, Star } from "lucide-react";
 
 const mockApplications = [
   {
     id: 1,
     company: "Tech Corp",
-    position: "Software Engineering Intern",
-    appliedDate: "2024-02-10",
+    position: "Frontend Developer",
     status: "Under Review",
+    date: "2024-01-15",
+    appliedOn: "2024-01-10",
   },
   {
     id: 2,
-    company: "StartupXYZ",
-    position: "Full Stack Developer",
-    appliedDate: "2024-02-15",
-    status: "Interview Scheduled",
+    company: "Data Inc",
+    position: "Data Analyst",
+    status: "Accepted",
+    date: "2024-01-10",
+    appliedOn: "2024-01-05",
   },
   {
     id: 3,
-    company: "Analytics Inc",
-    position: "Data Science Intern",
-    appliedDate: "2024-02-18",
-    status: "Accepted",
+    company: "Creative Studio",
+    position: "UI/UX Designer",
+    status: "Rejected",
+    date: "2024-01-08",
+    appliedOn: "2024-01-02",
   },
   {
     id: 4,
-    company: "CloudTech",
-    position: "DevOps Intern",
-    appliedDate: "2024-02-05",
-    status: "Rejected",
+    company: "StartupXYZ",
+    position: "Backend Developer",
+    status: "Interview",
+    date: "2024-01-12",
+    appliedOn: "2024-01-07",
+    interviewDate: "2024-01-20",
   },
 ];
 
+const statusConfig = {
+  "Under Review": {
+    icon: Clock,
+    color: "bg-amber-500",
+    textColor: "text-amber-700",
+    bgLight: "bg-amber-50",
+  },
+  Accepted: {
+    icon: CheckCircle,
+    color: "bg-green-500",
+    textColor: "text-green-700",
+    bgLight: "bg-green-50",
+  },
+  Rejected: {
+    icon: XCircle,
+    color: "bg-red-500",
+    textColor: "text-red-700",
+    bgLight: "bg-red-50",
+  },
+  Interview: {
+    icon: Star,
+    color: "bg-blue-500",
+    textColor: "text-blue-700",
+    bgLight: "bg-blue-50",
+  },
+};
+
 export default function Applications() {
-  const getStatusVariant = (status: string) => {
-    switch (status) {
-      case "Accepted":
-        return "default";
-      case "Interview Scheduled":
-        return "secondary";
-      case "Rejected":
-        return "destructive";
-      default:
-        return "outline";
-    }
-  };
-
-  const filterByStatus = (status: string) => {
-    if (status === "all") return mockApplications;
-    return mockApplications.filter((app) => app.status === status);
-  };
-
-  const MobileList = ({ status }: { status: string }) => {
-    const list = filterByStatus(status);
-    return (
-      <div className="grid gap-3 md:hidden">
-        {list.map((app) => (
-          <div
-            key={app.id}
-            className="rounded-lg border p-4 shadow-sm bg-background"
-          >
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="font-semibold">{app.position}</p>
-                <p className="text-sm text-muted-foreground">{app.company}</p>
-              </div>
-              <Badge variant={getStatusVariant(app.status)}>{app.status}</Badge>
-            </div>
-            <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-              <span>Applied: {app.appliedDate}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   return (
-    <>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">My Applications</h1>
-          <p className="text-muted-foreground">Track your application status</p>
-        </div>
-
-        <Tabs defaultValue="all">
-          <TabsList>
-            <TabsTrigger value="all">All Applications</TabsTrigger>
-            <TabsTrigger value="Under Review">Pending</TabsTrigger>
-            <TabsTrigger value="Interview Scheduled">Interviews</TabsTrigger>
-            <TabsTrigger value="Accepted">Accepted</TabsTrigger>
-            <TabsTrigger value="Rejected">Rejected</TabsTrigger>
-          </TabsList>
-
-          {[
-            "all",
-            "Under Review",
-            "Interview Scheduled",
-            "Accepted",
-            "Rejected",
-          ].map((status) => (
-            <TabsContent key={status} value={status} className="mt-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>
-                    {status === "all" ? "All" : status} (
-                    {filterByStatus(status).length})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {/* Mobile cards */}
-                  <MobileList status={status} />
-
-                  {/* Desktop table */}
-                  <div className="hidden md:block w-full overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Company</TableHead>
-                          <TableHead>Position</TableHead>
-                          <TableHead>Applied Date</TableHead>
-                          <TableHead>Status</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filterByStatus(status).map((app) => (
-                          <TableRow key={app.id}>
-                            <TableCell className="font-medium">
-                              {app.company}
-                            </TableCell>
-                            <TableCell>{app.position}</TableCell>
-                            <TableCell>{app.appliedDate}</TableCell>
-                            <TableCell>
-                              <Badge variant={getStatusVariant(app.status)}>
-                                {app.status}
-                              </Badge>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          ))}
-        </Tabs>
+    <div className="space-y-6">
+      {/* Heading */}
+      <div>
+        <h1 className="text-3xl font-bold">My Applications</h1>
+        <p className="text-muted-foreground">Track your application status</p>
       </div>
-    </>
+
+      {/* Card list like provided config */}
+      <Card className="border-none shadow-sm">
+        <CardHeader>
+          <CardTitle>Application Tracker</CardTitle>
+          <CardDescription>
+            Monitor the status of your applications
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {mockApplications.map((app) => {
+              const config =
+                statusConfig[app.status as keyof typeof statusConfig];
+              const StatusIcon = config.icon;
+              return (
+                <div
+                  key={app.id}
+                  className="flex flex-col gap-4 rounded-lg border p-4 shadow-sm transition-shadow hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${config.bgLight}`}
+                    >
+                      <StatusIcon className={`h-6 w-6 ${config.textColor}`} />
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <p className="font-semibold">{app.position}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {app.company}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Applied: {app.appliedOn}
+                      </p>
+                      {app.interviewDate && (
+                        <p className="text-xs font-medium text-blue-600">
+                          Interview: {app.interviewDate}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-start gap-2 sm:items-end">
+                    <Badge className={config.color}>{app.status}</Badge>
+                    <p className="text-xs text-muted-foreground">
+                      Updated: {app.date}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

@@ -13,85 +13,94 @@ import {
   Award,
   TrendingUp,
   ClipboardCheck,
-  FileText,
-  MessageSquare,
   Download,
+  MessageSquare,
 } from "lucide-react";
 import {
-  Bar,
-  BarChart,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  Cell,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-} from "recharts";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import Link from "next/link";
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from "chart.js";
+import { Bar, Line, Pie } from "react-chartjs-2";
 
-const performanceData = [
-  { name: "Alice Johnson", rating: 4.5 },
-  { name: "Bob Williams", rating: 4.0 },
-  { name: "Carol Davis", rating: 4.8 },
-  { name: "David Lee", rating: 4.2 },
-  { name: "Emma Wilson", rating: 4.6 },
-];
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-const progressTrendData = [
-  { week: "Week 1", progress: 40 },
-  { week: "Week 2", progress: 55 },
-  { week: "Week 3", progress: 65 },
-  { week: "Week 4", progress: 75 },
-  { week: "Week 5", progress: 85 },
-];
+// Mock Data
+const performanceData = {
+  labels: ["Alice", "Bob", "Carol", "David", "Emma"],
+  datasets: [
+    {
+      label: "Rating",
+      data: [4.5, 4.0, 4.8, 4.2, 4.6],
+      backgroundColor: "rgba(99, 102, 241, 0.7)",
+      borderRadius: 6,
+    },
+  ],
+};
 
-const departmentData = [
-  { department: "Computer Science", count: 8 },
-  { department: "Data Science", count: 5 },
-  { department: "IT", count: 4 },
-  { department: "Electronics", count: 3 },
-];
+const progressTrendData = {
+  labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
+  datasets: [
+    {
+      label: "Progress (%)",
+      data: [40, 55, 65, 75, 85],
+      borderColor: "rgba(16, 185, 129, 1)",
+      backgroundColor: "rgba(16, 185, 129, 0.2)",
+      tension: 0.4,
+      fill: true,
+      pointRadius: 5,
+    },
+  ],
+};
 
-const statusData = [
-  { name: "Active", value: 15, color: "hsl(var(--chart-1))" },
-  { name: "Completed", value: 8, color: "hsl(var(--chart-2))" },
-  { name: "On Hold", value: 2, color: "hsl(var(--chart-3))" },
-];
+const departmentData = {
+  labels: ["CSE", "Data Science", "IT", "ECE"],
+  datasets: [
+    {
+      label: "Interns",
+      data: [8, 5, 4, 3],
+      backgroundColor: [
+        "rgba(99, 102, 241, 0.7)",
+        "rgba(16, 185, 129, 0.7)",
+        "rgba(234, 179, 8, 0.7)",
+        "rgba(239, 68, 68, 0.7)",
+      ],
+      borderRadius: 6,
+    },
+  ],
+};
 
-const recentActivity = [
-  {
-    id: 1,
-    intern: "Alice Johnson",
-    action: "Submitted weekly report",
-    time: "2 hours ago",
-  },
-  {
-    id: 2,
-    intern: "Bob Williams",
-    action: "Completed milestone 3",
-    time: "5 hours ago",
-  },
-  {
-    id: 3,
-    intern: "Carol Davis",
-    action: "Requested evaluation",
-    time: "1 day ago",
-  },
-  {
-    id: 4,
-    intern: "David Lee",
-    action: "Updated project status",
-    time: "2 days ago",
-  },
-];
+const statusData = {
+  labels: ["Active", "Completed", "On Hold"],
+  datasets: [
+    {
+      data: [15, 8, 2],
+      backgroundColor: [
+        "rgba(59,130,246,0.7)",
+        "rgba(34,197,94,0.7)",
+        "rgba(234,179,8,0.7)",
+      ],
+      borderWidth: 1,
+    },
+  ],
+};
 
 export default function SupervisorDashboard() {
   return (
@@ -122,76 +131,56 @@ export default function SupervisorDashboard() {
         </div>
       </div>
 
-      {/* Stats Cards - 2 per row on mobile */}
+      {/* Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <Card className="hover:shadow-md transition-shadow">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xs sm:text-sm font-medium">
-                Active Interns
-              </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">15</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Under supervision
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xs sm:text-sm font-medium">
-                Pending Reviews
-              </CardTitle>
-              <ClipboardCheck className="h-4 w-4 text-muted-foreground" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground mt-1">Need attention</p>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xs sm:text-sm font-medium">
-                Avg Performance
-              </CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">4.4/5</div>
-            <p className="text-xs text-muted-foreground mt-1">Overall rating</p>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xs sm:text-sm font-medium">
-                Certificates
-              </CardTitle>
-              <Award className="h-4 w-4 text-muted-foreground" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">45</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Issued this year
-            </p>
-          </CardContent>
-        </Card>
+        {[
+          {
+            title: "Active Interns",
+            value: 15,
+            icon: Users,
+            subtitle: "Under supervision",
+          },
+          {
+            title: "Pending Reviews",
+            value: 8,
+            icon: ClipboardCheck,
+            subtitle: "Need attention",
+          },
+          {
+            title: "Avg Performance",
+            value: "4.4/5",
+            icon: TrendingUp,
+            subtitle: "Overall rating",
+          },
+          {
+            title: "Certificates",
+            value: 45,
+            icon: Award,
+            subtitle: "Issued this year",
+          },
+        ].map((stat, i) => (
+          <Card key={i} className="hover:shadow-md transition-shadow">
+            <CardHeader className="pb-2">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-xs sm:text-sm font-medium">
+                  {stat.title}
+                </CardTitle>
+                <stat.icon className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-xl sm:text-2xl font-bold">{stat.value}</div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {stat.subtitle}
+              </p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
-      {/* Charts Section */}
+      {/* Charts */}
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Performance Ratings Chart */}
+        {/* Performance Ratings */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base sm:text-lg">
@@ -202,39 +191,22 @@ export default function SupervisorDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer
-              config={{
-                rating: {
-                  label: "Rating",
-                  color: "hsl(var(--chart-1))",
-                },
-              }}
-              className="h-[250px] sm:h-[300px]"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={performanceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="name"
-                    tick={{ fontSize: 10 }}
-                    angle={-45}
-                    textAnchor="end"
-                    height={80}
-                  />
-                  <YAxis domain={[0, 5]} tick={{ fontSize: 10 }} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar
-                    dataKey="rating"
-                    fill="var(--color-rating)"
-                    radius={[4, 4, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <div className="h-[250px] sm:h-[300px]">
+              <Bar
+                data={performanceData}
+                options={{
+                  responsive: true,
+                  plugins: { legend: { position: "bottom" } },
+                  scales: {
+                    y: { beginAtZero: true, max: 5 },
+                  },
+                }}
+              />
+            </div>
           </CardContent>
         </Card>
 
-        {/* Progress Trend Chart */}
+        {/* Progress Trend */}
         <Card>
           <CardHeader>
             <CardTitle className="text-base sm:text-lg">
@@ -245,31 +217,18 @@ export default function SupervisorDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer
-              config={{
-                progress: {
-                  label: "Progress %",
-                  color: "hsl(var(--chart-2))",
-                },
-              }}
-              className="h-[250px] sm:h-[300px]"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={progressTrendData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="week" tick={{ fontSize: 10 }} />
-                  <YAxis tick={{ fontSize: 10 }} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Line
-                    type="monotone"
-                    dataKey="progress"
-                    stroke="var(--color-progress)"
-                    strokeWidth={2}
-                    dot={{ r: 4 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <div className="h-[250px] sm:h-[300px]">
+              <Line
+                data={progressTrendData}
+                options={{
+                  responsive: true,
+                  plugins: { legend: { position: "bottom" } },
+                  scales: {
+                    y: { beginAtZero: true, max: 100 },
+                  },
+                }}
+              />
+            </div>
           </CardContent>
         </Card>
 
@@ -284,34 +243,19 @@ export default function SupervisorDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer
-              config={{
-                count: {
-                  label: "Interns",
-                  color: "hsl(var(--chart-3))",
-                },
-              }}
-              className="h-[250px] sm:h-[300px]"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={departmentData} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis type="number" tick={{ fontSize: 10 }} />
-                  <YAxis
-                    dataKey="department"
-                    type="category"
-                    width={100}
-                    tick={{ fontSize: 10 }}
-                  />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar
-                    dataKey="count"
-                    fill="var(--color-count)"
-                    radius={[0, 4, 4, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <div className="h-[250px] sm:h-[300px]">
+              <Bar
+                data={departmentData}
+                options={{
+                  indexAxis: "y",
+                  responsive: true,
+                  plugins: { legend: { display: false } },
+                  scales: {
+                    x: { beginAtZero: true },
+                  },
+                }}
+              />
+            </div>
           </CardContent>
         </Card>
 
@@ -326,132 +270,15 @@ export default function SupervisorDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer
-              config={{
-                active: {
-                  label: "Active",
-                  color: "hsl(var(--chart-1))",
-                },
-                completed: {
-                  label: "Completed",
-                  color: "hsl(var(--chart-2))",
-                },
-                onHold: {
-                  label: "On Hold",
-                  color: "hsl(var(--chart-3))",
-                },
-              }}
-              className="h-[250px] sm:h-[300px]"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={statusData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) =>
-                      `${name} ${(percent * 100).toFixed(0)}%`
-                    }
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {statusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                </PieChart>
-              </ResponsiveContainer>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Quick Actions & Recent Activity */}
-      <div className="grid gap-4 lg:grid-cols-2">
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base sm:text-lg">
-              Quick Actions
-            </CardTitle>
-            <CardDescription className="text-xs sm:text-sm">
-              Common tasks and shortcuts
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Link href="/supervisor/interns">
-              <Button
-                variant="outline"
-                className="w-full justify-start bg-transparent"
-              >
-                <Users className="h-4 w-4 mr-2" />
-                View All Interns
-              </Button>
-            </Link>
-            <Link href="/supervisor/evaluations">
-              <Button
-                variant="outline"
-                className="w-full justify-start bg-transparent"
-              >
-                <ClipboardCheck className="h-4 w-4 mr-2" />
-                Pending Evaluations
-              </Button>
-            </Link>
-            <Link href="/supervisor/certificates">
-              <Button
-                variant="outline"
-                className="w-full justify-start bg-transparent"
-              >
-                <Award className="h-4 w-4 mr-2" />
-                Issue Certificates
-              </Button>
-            </Link>
-            <Button
-              variant="outline"
-              className="w-full justify-start bg-transparent"
-            >
-              <FileText className="h-4 w-4 mr-2" />
-              Generate Reports
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base sm:text-lg">
-              Recent Activity
-            </CardTitle>
-            <CardDescription className="text-xs sm:text-sm">
-              Latest updates from interns
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {recentActivity.map((activity) => (
-                <div
-                  key={activity.id}
-                  className="flex items-start gap-3 pb-3 border-b last:border-0"
-                >
-                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Users className="h-4 w-4 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">
-                      {activity.intern}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {activity.action}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {activity.time}
-                    </p>
-                  </div>
-                </div>
-              ))}
+            <div className="h-[250px] sm:h-[300px] flex items-center justify-center">
+              <Pie
+                data={statusData}
+                options={{
+                  plugins: {
+                    legend: { position: "bottom" },
+                  },
+                }}
+              />
             </div>
           </CardContent>
         </Card>

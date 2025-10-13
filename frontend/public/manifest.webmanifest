@@ -1,7 +1,7 @@
 {
   "name": "Saarthi",
   "short_name": "Saarthi",
-  "description": "",
+  "description": "An Integrated, AI-Driven, Unified Platform for Training, Internships, and Placements",
   "display": "standalone",
   "start_url": "/",
   "scope": "/",

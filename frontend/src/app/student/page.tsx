@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Switch } from "@/components/ui/switch";
 
 import {
   Card,
@@ -214,6 +215,27 @@ const statusConfig = {
 export default function StudentDashboard() {
   const [copied, setCopied] = useState(false);
   const profileUrl = "https://portal.university.edu/profile/student123";
+  // const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+
+  const [projects, setProjects] = useState(mockProjects);
+  const [certs, setCerts] = useState(mockCertifications);
+
+  const [openProjectDialog, setOpenProjectDialog] = useState(false);
+  const [openCertDialog, setOpenCertDialog] = useState(false);
+
+  const [projectForm, setProjectForm] = useState({
+    title: "",
+    tech: "",
+    description: "",
+    link: "",
+  });
+
+  const [certForm, setCertForm] = useState({
+    name: "",
+    issuer: "",
+    date: "",
+    verified: false,
+  });
 
   const calculateCGPA = () => {
     const totalSGPA = mockSemesters.reduce((sum, sem) => sum + sem.sgpa, 0);
@@ -234,6 +256,38 @@ export default function StudentDashboard() {
         url: profileUrl,
       });
     }
+  };
+
+  const handleAddProject = () => {
+    if (!projectForm.title.trim() || !projectForm.tech.trim()) return;
+    setProjects((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        title: projectForm.title.trim(),
+        tech: projectForm.tech.trim(),
+        description: projectForm.description.trim(),
+        link: projectForm.link.trim(),
+      },
+    ]);
+    setProjectForm({ title: "", tech: "", description: "", link: "" });
+    setOpenProjectDialog(false);
+  };
+
+  const handleAddCert = () => {
+    if (!certForm.name.trim() || !certForm.issuer.trim()) return;
+    setCerts((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        name: certForm.name.trim(),
+        issuer: certForm.issuer.trim(),
+        date: certForm.date || new Date().toISOString().slice(0, 10),
+        verified: !!certForm.verified,
+      },
+    ]);
+    setCertForm({ name: "", issuer: "", date: "", verified: false });
+    setOpenCertDialog(false);
   };
 
   return (
@@ -606,71 +660,92 @@ export default function StudentDashboard() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="overflow-x-auto rounded-lg border">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-muted/50 border-b">
-                        <th className="px-4 py-3 text-left font-semibold">
-                          Semester
-                        </th>
-                        <th className="px-4 py-3 text-left font-semibold">
-                          SGPA
-                        </th>
-                        <th className="px-4 py-3 text-left font-semibold">
-                          Credits
-                        </th>
-                        <th className="px-4 py-3 text-left font-semibold">
-                          Backlogs
-                        </th>
-                        <th className="px-4 py-3 text-left font-semibold">
-                          Status
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {mockSemesters.map((s, idx) => (
-                        <tr
-                          key={s.sem}
-                          className={`border-b last:border-0 transition-colors hover:bg-muted/30 ${
-                            idx % 2 === 0 ? "bg-background" : "bg-muted/10"
-                          }`}
-                        >
-                          <td className="px-4 py-3 font-medium">{s.sem}</td>
-                          <td className="px-4 py-3 font-semibold">{s.sgpa}</td>
-                          <td className="px-4 py-3">{s.credits}</td>
-                          <td className="px-4 py-3">
-                            {s.backlogs === 0 ? (
-                              <Badge
-                                variant="outline"
-                                className="bg-green-50 text-green-700 border-green-200"
-                              >
-                                0
-                              </Badge>
-                            ) : (
-                              <Badge variant="destructive">{s.backlogs}</Badge>
-                            )}
-                          </td>
-                          <td className="px-4 py-3">
-                            <Badge
-                              variant={
-                                s.sgpa >= 8.5
-                                  ? "default"
-                                  : s.sgpa >= 7.5
-                                  ? "secondary"
-                                  : "outline"
-                              }
-                            >
-                              {s.sgpa >= 8.5
-                                ? "Excellent"
-                                : s.sgpa >= 7.5
-                                ? "Good"
-                                : "Average"}
-                            </Badge>
-                          </td>
+                {/* Mobile hint to indicate horizontal scroll */}
+                <p className="sm:hidden text-xs text-muted-foreground">
+                  Tip: swipe left/right to see all columns
+                </p>
+
+                {/* Full-bleed scroll container on mobile so only the table scrolls */}
+                <div className="relative -mx-4 sm:mx-0">
+                  <div
+                    className="overflow-x-auto rounded-lg border bg-background"
+                    role="region"
+                    aria-label="Academic performance table"
+                    tabIndex={0}
+                  >
+                    <table className="min-w-[640px] w-full text-sm">
+                      <thead className="sticky top-0 z-10 bg-muted/50">
+                        <tr className="border-b">
+                          <th className="whitespace-nowrap px-4 py-3 text-left font-semibold">
+                            Semester
+                          </th>
+                          <th className="whitespace-nowrap px-4 py-3 text-left font-semibold">
+                            SGPA
+                          </th>
+                          <th className="whitespace-nowrap px-4 py-3 text-left font-semibold">
+                            Credits
+                          </th>
+                          <th className="whitespace-nowrap px-4 py-3 text-left font-semibold">
+                            Backlogs
+                          </th>
+                          <th className="whitespace-nowrap px-4 py-3 text-left font-semibold">
+                            Status
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {mockSemesters.map((s, idx) => (
+                          <tr
+                            key={s.sem}
+                            className={`border-b last:border-0 transition-colors hover:bg-muted/30 ${
+                              idx % 2 === 0 ? "bg-background" : "bg-muted/10"
+                            }`}
+                          >
+                            <td className="whitespace-nowrap px-4 py-3 font-medium">
+                              {s.sem}
+                            </td>
+                            <td className="whitespace-nowrap px-4 py-3 font-semibold">
+                              {s.sgpa}
+                            </td>
+                            <td className="whitespace-nowrap px-4 py-3">
+                              {s.credits}
+                            </td>
+                            <td className="whitespace-nowrap px-4 py-3">
+                              {s.backlogs === 0 ? (
+                                <Badge
+                                  variant="outline"
+                                  className="bg-green-50 text-green-700 border-green-200"
+                                >
+                                  0
+                                </Badge>
+                              ) : (
+                                <Badge variant="destructive">
+                                  {s.backlogs}
+                                </Badge>
+                              )}
+                            </td>
+                            <td className="whitespace-nowrap px-4 py-3">
+                              <Badge
+                                variant={
+                                  s.sgpa >= 8.5
+                                    ? "default"
+                                    : s.sgpa >= 7.5
+                                    ? "secondary"
+                                    : "outline"
+                                }
+                              >
+                                {s.sgpa >= 8.5
+                                  ? "Excellent"
+                                  : s.sgpa >= 7.5
+                                  ? "Good"
+                                  : "Average"}
+                              </Badge>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-3">
@@ -725,12 +800,101 @@ export default function StudentDashboard() {
                       Showcase your technical projects
                     </CardDescription>
                   </div>
-                  <Button className="w-full sm:w-auto">Add Project</Button>
+                  <Dialog
+                    open={openProjectDialog}
+                    onOpenChange={setOpenProjectDialog}
+                  >
+                    <DialogTrigger asChild>
+                      <Button className="w-full sm:w-auto">Add Project</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-lg">
+                      <DialogHeader>
+                        <DialogTitle>Add Project</DialogTitle>
+                        <CardDescription>
+                          Provide details about your project
+                        </CardDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="proj-title">Title *</Label>
+                          <Input
+                            id="proj-title"
+                            placeholder="E.g., E-commerce Platform"
+                            value={projectForm.title}
+                            onChange={(e) =>
+                              setProjectForm((p) => ({
+                                ...p,
+                                title: e.target.value,
+                              }))
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="proj-tech">Tech Stack *</Label>
+                          <Input
+                            id="proj-tech"
+                            placeholder="E.g., Next.js, TypeScript, Prisma"
+                            value={projectForm.tech}
+                            onChange={(e) =>
+                              setProjectForm((p) => ({
+                                ...p,
+                                tech: e.target.value,
+                              }))
+                            }
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            Comma-separated values recommended
+                          </p>
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="proj-desc">Description</Label>
+                          <Textarea
+                            id="proj-desc"
+                            placeholder="What did you build? What problems does it solve?"
+                            rows={4}
+                            className="resize-none"
+                            value={projectForm.description}
+                            onChange={(e) =>
+                              setProjectForm((p) => ({
+                                ...p,
+                                description: e.target.value,
+                              }))
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="proj-link">Link</Label>
+                          <Input
+                            id="proj-link"
+                            placeholder="github.com/your-repo or live demo link"
+                            value={projectForm.link}
+                            onChange={(e) =>
+                              setProjectForm((p) => ({
+                                ...p,
+                                link: e.target.value,
+                              }))
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-end gap-2 pt-2">
+                          <Button
+                            variant="outline"
+                            onClick={() => setOpenProjectDialog(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button onClick={handleAddProject}>
+                            Add Project
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {mockProjects.map((project) => (
+                  {projects.map((project) => (
                     <Card
                       key={project.id}
                       className="border-l-4 border-l-primary shadow-sm transition-shadow hover:shadow-md"
@@ -785,14 +949,98 @@ export default function StudentDashboard() {
                       Your verified certifications and awards
                     </CardDescription>
                   </div>
-                  <Button className="w-full sm:w-auto">
-                    Add Certification
-                  </Button>
+                  <Dialog
+                    open={openCertDialog}
+                    onOpenChange={setOpenCertDialog}
+                  >
+                    <DialogTrigger asChild>
+                      <Button className="w-full sm:w-auto">
+                        Add Certification
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-lg">
+                      <DialogHeader>
+                        <DialogTitle>Add Certification</DialogTitle>
+                        <CardDescription>
+                          Enter the details of your certification
+                        </CardDescription>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="cert-name">
+                            Certification Name *
+                          </Label>
+                          <Input
+                            id="cert-name"
+                            placeholder="E.g., AWS Certified Developer"
+                            value={certForm.name}
+                            onChange={(e) =>
+                              setCertForm((c) => ({
+                                ...c,
+                                name: e.target.value,
+                              }))
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="cert-issuer">Issuer *</Label>
+                          <Input
+                            id="cert-issuer"
+                            placeholder="Organization or Platform"
+                            value={certForm.issuer}
+                            onChange={(e) =>
+                              setCertForm((c) => ({
+                                ...c,
+                                issuer: e.target.value,
+                              }))
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="cert-date">Date</Label>
+                          <Input
+                            id="cert-date"
+                            type="date"
+                            value={certForm.date}
+                            onChange={(e) =>
+                              setCertForm((c) => ({
+                                ...c,
+                                date: e.target.value,
+                              }))
+                            }
+                          />
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                          <Label htmlFor="cert-verified" className="text-sm">
+                            Verified
+                          </Label>
+                          <Switch
+                            id="cert-verified"
+                            checked={certForm.verified}
+                            onCheckedChange={(v) =>
+                              setCertForm((c) => ({ ...c, verified: v }))
+                            }
+                          />
+                        </div>
+                        <div className="flex justify-end gap-2 pt-2">
+                          <Button
+                            variant="outline"
+                            onClick={() => setOpenCertDialog(false)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button onClick={handleAddCert}>
+                            Add Certification
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {mockCertifications.map((cert) => (
+                  {certs.map((cert) => (
                     <div
                       key={cert.id}
                       className="flex flex-col gap-4 rounded-lg border p-4 shadow-sm transition-shadow hover:shadow-md sm:flex-row sm:items-start"

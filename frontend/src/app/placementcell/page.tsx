@@ -232,7 +232,7 @@ export default function PlacementDashboard() {
             asChild
             className="w-full sm:w-auto bg-transparent"
           >
-            <Link href="/placement/recruiters">
+            <Link href="/placementcell/recruiters">
               Review
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -249,7 +249,7 @@ export default function PlacementDashboard() {
             value: 24,
             subtitle: "+4 this month",
             color: "text-blue-600",
-            href: "/placement/job-openings",
+            href: "/placementcell/job-openings",
           },
           {
             title: "Total Applications",
@@ -257,7 +257,7 @@ export default function PlacementDashboard() {
             value: 342,
             subtitle: "Across all openings",
             color: "text-green-600",
-            href: "/placement/job-openings",
+            href: "/placementcell/job-openings",
           },
           {
             title: "Verified Recruiters",
@@ -265,7 +265,7 @@ export default function PlacementDashboard() {
             value: 18,
             subtitle: "2 pending verification",
             color: "text-purple-600",
-            href: "/placement/recruiters",
+            href: "/placementcell/recruiters",
           },
           {
             title: "Placement Rate",
@@ -273,7 +273,7 @@ export default function PlacementDashboard() {
             value: "78%",
             subtitle: "+5% from last year",
             color: "text-orange-600",
-            href: "/placement/reports",
+            href: "/placementcell/reports",
           },
         ].map((card, i) => (
           <Link key={i} href={card.href}>
@@ -354,7 +354,7 @@ export default function PlacementDashboard() {
 
       {/* Quick Actions */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Link href="/placement/job-openings">
+        <Link href="/placementcell/job-openings">
           <Card className="cursor-pointer transition-all hover:shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
@@ -367,7 +367,7 @@ export default function PlacementDashboard() {
             </CardHeader>
           </Card>
         </Link>
-        <Link href="/placement/recruiters">
+        <Link href="/placementcell/recruiters">
           <Card className="cursor-pointer transition-all hover:shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
@@ -380,7 +380,7 @@ export default function PlacementDashboard() {
             </CardHeader>
           </Card>
         </Link>
-        <Link href="/placement/reports">
+        <Link href="/placementcell/reports">
           <Card className="cursor-pointer transition-all hover:shadow-md">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base sm:text-lg">

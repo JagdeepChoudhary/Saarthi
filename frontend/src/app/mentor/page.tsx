@@ -20,21 +20,31 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import Link from "next/link";
+import { Line, Bar } from "react-chartjs-2";
 import {
-  Bar,
-  BarChart,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-} from "recharts";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 const mockStudents = [
   {
@@ -86,6 +96,62 @@ const studentPerformanceData = [
   { category: "Placed", count: 8 },
 ];
 
+// Chart Configurations
+const lineData = {
+  labels: progressData.map((d) => d.month),
+  datasets: [
+    {
+      label: "Average Progress (%)",
+      data: progressData.map((d) => d.progress),
+      borderColor: "hsl(217.2 91.2% 59.8%)",
+      backgroundColor: "rgba(59,130,246,0.2)",
+      tension: 0.4,
+      fill: true,
+      pointRadius: 4,
+      pointBackgroundColor: "hsl(217.2 91.2% 59.8%)",
+    },
+  ],
+};
+
+const lineOptions = {
+  responsive: true,
+  plugins: {
+    legend: { display: false },
+  },
+  scales: {
+    x: { grid: { color: "rgba(200,200,200,0.1)" } },
+    y: { beginAtZero: true, grid: { color: "rgba(200,200,200,0.1)" } },
+  },
+};
+
+const barData = {
+  labels: studentPerformanceData.map((d) => d.category),
+  datasets: [
+    {
+      label: "Count",
+      data: studentPerformanceData.map((d) => d.count),
+      backgroundColor: [
+        "rgba(59,130,246,0.8)",
+        "rgba(34,197,94,0.8)",
+        "rgba(234,179,8,0.8)",
+        "rgba(239,68,68,0.8)",
+      ],
+      borderRadius: 8,
+    },
+  ],
+};
+
+const barOptions = {
+  responsive: true,
+  plugins: {
+    legend: { display: false },
+  },
+  scales: {
+    x: { grid: { color: "rgba(200,200,200,0.1)" } },
+    y: { beginAtZero: true, grid: { color: "rgba(200,200,200,0.1)" } },
+  },
+};
+
 export default function MentorDashboard() {
   return (
     <div className="space-y-6">
@@ -98,60 +164,50 @@ export default function MentorDashboard() {
         </p>
       </div>
 
+      {/* Stats Cards */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-xs sm:text-sm font-medium">
-              Total Mentees
-            </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">Active students</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-xs sm:text-sm font-medium">
-              Pending Approvals
-            </CardTitle>
-            <ClipboardCheck className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">7</div>
-            <p className="text-xs text-muted-foreground">Awaiting review</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-xs sm:text-sm font-medium">
-              Avg Progress
-            </CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">73%</div>
-            <Progress value={73} className="mt-2" />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-xs sm:text-sm font-medium">
-              Feedback Given
-            </CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-xl sm:text-2xl font-bold">156</div>
-            <p className="text-xs text-muted-foreground">This semester</p>
-          </CardContent>
-        </Card>
+        {[
+          {
+            title: "Total Mentees",
+            value: 24,
+            icon: Users,
+            desc: "Active students",
+          },
+          {
+            title: "Pending Approvals",
+            value: 7,
+            icon: ClipboardCheck,
+            desc: "Awaiting review",
+          },
+          {
+            title: "Avg Progress",
+            value: "73%",
+            icon: TrendingUp,
+            desc: "Overall",
+          },
+          {
+            title: "Feedback Given",
+            value: 156,
+            icon: FileText,
+            desc: "This semester",
+          },
+        ].map(({ title, value, icon: Icon, desc }) => (
+          <Card key={title}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-xs sm:text-sm font-medium">
+                {title}
+              </CardTitle>
+              <Icon className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-xl sm:text-2xl font-bold">{value}</div>
+              <p className="text-xs text-muted-foreground">{desc}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
+      {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
@@ -163,30 +219,9 @@ export default function MentorDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer
-              config={{
-                progress: {
-                  label: "Progress",
-                  color: "hsl(var(--primary))",
-                },
-              }}
-              className="h-[200px] sm:h-[250px]"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={progressData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Line
-                    type="monotone"
-                    dataKey="progress"
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <div className="h-[200px] sm:h-[250px]">
+              <Line data={lineData} options={lineOptions} />
+            </div>
           </CardContent>
         </Card>
 
@@ -200,33 +235,14 @@ export default function MentorDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer
-              config={{
-                count: {
-                  label: "Count",
-                  color: "hsl(var(--primary))",
-                },
-              }}
-              className="h-[200px] sm:h-[250px]"
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={studentPerformanceData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="category" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Bar
-                    dataKey="count"
-                    fill="hsl(var(--primary))"
-                    radius={[4, 4, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </ChartContainer>
+            <div className="h-[200px] sm:h-[250px]">
+              <Bar data={barData} options={barOptions} />
+            </div>
           </CardContent>
         </Card>
       </div>
 
+      {/* Student List + Quick Actions */}
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
@@ -243,7 +259,7 @@ export default function MentorDashboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="text-xs sm:text-sm bg-transparent"
+                  className="text-xs sm:text-sm"
                 >
                   View All
                   <ArrowUpRight className="ml-1 h-3 w-3" />
@@ -291,18 +307,10 @@ export default function MentorDashboard() {
                     <Progress value={student.progress} />
                   </div>
                   <div className="mt-3 flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="text-xs bg-transparent"
-                    >
+                    <Button size="sm" variant="outline" className="text-xs">
                       View Profile
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="text-xs bg-transparent"
-                    >
+                    <Button size="sm" variant="outline" className="text-xs">
                       <MessageSquare className="h-3 w-3 mr-1" />
                       Message
                     </Button>
@@ -321,40 +329,34 @@ export default function MentorDashboard() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Link href="/mentor/approvals">
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-xs sm:text-sm bg-transparent"
-                >
-                  <ClipboardCheck className="mr-2 h-4 w-4" />
-                  Review Approvals
-                </Button>
-              </Link>
-              <Link href="/mentor/meetings">
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-xs sm:text-sm bg-transparent"
-                >
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Schedule Meeting
-                </Button>
-              </Link>
-              <Button
-                variant="outline"
-                className="w-full justify-start text-xs sm:text-sm bg-transparent"
-              >
-                <MessageSquare className="mr-2 h-4 w-4" />
-                Send Feedback
-              </Button>
-              <Link href="/mentor/students">
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-xs sm:text-sm bg-transparent"
-                >
-                  <Users className="mr-2 h-4 w-4" />
-                  View All Students
-                </Button>
-              </Link>
+              {[
+                {
+                  href: "/mentor/approvals",
+                  icon: ClipboardCheck,
+                  text: "Review Approvals",
+                },
+                {
+                  href: "/mentor/meetings",
+                  icon: Calendar,
+                  text: "Schedule Meeting",
+                },
+                { href: "#", icon: MessageSquare, text: "Send Feedback" },
+                {
+                  href: "/mentor/students",
+                  icon: Users,
+                  text: "View All Students",
+                },
+              ].map(({ href, icon: Icon, text }) => (
+                <Link href={href} key={text}>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start text-xs sm:text-sm bg-transparent"
+                  >
+                    <Icon className="mr-2 h-4 w-4" />
+                    {text}
+                  </Button>
+                </Link>
+              ))}
             </CardContent>
           </Card>
 
@@ -378,11 +380,7 @@ export default function MentorDashboard() {
                 </p>
               </div>
               <Link href="/mentor/meetings">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="w-full text-xs bg-transparent"
-                >
+                <Button variant="outline" size="sm" className="w-full text-xs">
                   View All Meetings
                 </Button>
               </Link>

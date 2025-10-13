@@ -24,7 +24,7 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       {/* ✅ Top Navbar */}
-      <Navbar />
+      <Navbar role="supervisor" />
 
       <div className="flex flex-1">
         {/* ✅ Sidebar (desktop) */}

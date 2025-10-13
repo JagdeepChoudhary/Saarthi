@@ -25,6 +25,8 @@ import {
   Briefcase,
   ArrowUpRight,
 } from "lucide-react";
+import { JobDetailsModal } from "@/components/recuiter/view-applications-details";
+import { useState } from "react";
 
 const mockJobs = [
   {
@@ -65,7 +67,20 @@ const mockJobs = [
   },
 ];
 
+type Job = {
+  id: number;
+  title: string;
+  applicants: number;
+  shortlisted: number;
+  interviewed: number;
+  selected: number;
+  status: string;
+};
+
 export default function Applications() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+
   return (
     <div className="space-y-4 md:space-y-6">
       <div>
@@ -194,7 +209,14 @@ export default function Applications() {
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <Button size="sm" variant="outline">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setSelectedJob(job);
+                              setModalOpen(true);
+                            }}
+                          >
                             View Details
                           </Button>
                         </TableCell>
@@ -285,6 +307,11 @@ export default function Applications() {
           </Card>
         </TabsContent>
       </Tabs>
+      <JobDetailsModal
+        job={selectedJob}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+      />
     </div>
   );
 }

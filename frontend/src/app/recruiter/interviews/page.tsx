@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import {
   Card,
   CardContent,
@@ -13,6 +15,24 @@ import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Video, Clock, MapPin, CalendarIcon, Plus } from "lucide-react";
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
 const mockInterviews = [
   {
@@ -53,8 +73,217 @@ const mockInterviews = [
   },
 ];
 
+function ScheduleInterviewDialog({
+  open,
+  setOpen,
+  editing,
+  setEditing,
+  onSubmit,
+}: {
+  open: boolean;
+  setOpen: (v: boolean) => void;
+  editing: {
+    id?: number;
+    candidate: string;
+    position: string;
+    date: string;
+    time: string;
+    mode: "Virtual" | "In-person";
+    location: string;
+  } | null;
+  setEditing: (
+    v: {
+      id?: number;
+      candidate: string;
+      position: string;
+      date: string;
+      time: string;
+      mode: "Virtual" | "In-person";
+      location: string;
+    } | null
+  ) => void;
+  onSubmit: (e: React.FormEvent) => void;
+}) {
+  if (!editing) return null;
+  const isReschedule = Boolean(editing.id);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="text-pretty">
+            {isReschedule ? "Reschedule Interview" : "Schedule Interview"}
+          </DialogTitle>
+          <DialogDescription>
+            {isReschedule
+              ? "Update the details and save to reschedule."
+              : "Fill out the details to create a new interview."}
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={onSubmit} className="space-y-4">
+          <div className="grid gap-3">
+            <div className="grid gap-1.5">
+              <Label htmlFor="candidate">Candidate</Label>
+              <Input
+                id="candidate"
+                value={editing.candidate}
+                onChange={(e) =>
+                  setEditing({ ...editing, candidate: e.target.value })
+                }
+                placeholder="e.g. Amit Kumar"
+                required
+              />
+            </div>
+
+            <div className="grid gap-1.5">
+              <Label htmlFor="position">Position</Label>
+              <Input
+                id="position"
+                value={editing.position}
+                onChange={(e) =>
+                  setEditing({ ...editing, position: e.target.value })
+                }
+                placeholder="e.g. Full Stack Developer"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid gap-1.5">
+                <Label htmlFor="date">Date</Label>
+                <Input
+                  id="date"
+                  type="date"
+                  value={editing.date}
+                  onChange={(e) =>
+                    setEditing({ ...editing, date: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="grid gap-1.5">
+                <Label htmlFor="time">Time</Label>
+                <Input
+                  id="time"
+                  type="time"
+                  value={editing.time}
+                  onChange={(e) =>
+                    setEditing({ ...editing, time: e.target.value })
+                  }
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-1.5">
+              <Label>Mode</Label>
+              <Select
+                value={editing.mode}
+                onValueChange={(v: "Virtual" | "In-person") =>
+                  setEditing({ ...editing, mode: v })
+                }
+              >
+                <SelectTrigger aria-label="Interview mode">
+                  <SelectValue placeholder="Select mode" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Virtual">Virtual</SelectItem>
+                  <SelectItem value="In-person">In-person</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid gap-1.5">
+              <Label htmlFor="location">
+                {editing.mode === "Virtual" ? "Meeting link" : "Location"}
+              </Label>
+              <Input
+                id="location"
+                value={editing.location}
+                onChange={(e) =>
+                  setEditing({ ...editing, location: e.target.value })
+                }
+                placeholder={
+                  editing.mode === "Virtual"
+                    ? "https://meet.example.com/..."
+                    : "Office HQ, 2nd Floor"
+                }
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2 sm:gap-0">
+            <DialogClose asChild>
+              <Button type="button" variant="outline">
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="submit">
+              {isReschedule ? "Save changes" : "Schedule"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function Interviews() {
   const [date, setDate] = useState<Date | undefined>(new Date());
+
+  const [open, setOpen] = useState(false);
+  const [editing, setEditing] = useState<null | {
+    id?: number;
+    candidate: string;
+    position: string;
+    date: string;
+    time: string;
+    mode: "Virtual" | "In-person";
+    location: string;
+  }>(null);
+
+  const resetForm = () =>
+    setEditing({
+      candidate: "",
+      position: "",
+      date: "",
+      time: "",
+      mode: "Virtual",
+      location: "",
+    });
+
+  const handleOpenSchedule = () => {
+    resetForm();
+    setOpen(true);
+  };
+
+  const handleOpenReschedule = (it: {
+    id: number;
+    candidate: string;
+    position: string;
+    date: string;
+    time: string;
+    mode: "Virtual" | "In-person";
+  }) => {
+    setEditing({
+      id: it.id,
+      candidate: it.candidate,
+      position: it.position,
+      date: it.date,
+      time: it.time,
+      mode: it.mode,
+      location: "",
+    });
+    setOpen(true);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("[v0] Schedule/Reschedule submitted:", editing);
+    // In a real app, call your API or server action here, then refetch list (SWR) or update state.
+    setOpen(false);
+  };
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -67,13 +296,14 @@ export default function Interviews() {
             Schedule and manage interviews
           </p>
         </div>
-        <Button size="sm">
+        {/* Connect Schedule Interview button to modal */}
+        <Button size="sm" onClick={handleOpenSchedule}>
           <Plus className="mr-2 h-4 w-4" />
           Schedule Interview
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-xs md:text-sm font-medium">
@@ -104,7 +334,7 @@ export default function Interviews() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-2 md:col-span-1">
+        <Card className="sm:col-span-2 md:col-span-1">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-xs md:text-sm font-medium">
               Completed
@@ -167,11 +397,22 @@ export default function Interviews() {
                           </div>
                         </div>
                         <div className="flex flex-col gap-2">
-                          <Badge className="bg-green-500 w-fit">
+                          <Badge variant="secondary" className="w-fit">
                             Confirmed
                           </Badge>
                           <div className="flex gap-2">
-                            <Button size="sm" variant="outline">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                handleOpenReschedule({
+                                  ...interview,
+                                  mode: interview.mode as
+                                    | "Virtual"
+                                    | "In-person",
+                                })
+                              }
+                            >
                               Reschedule
                             </Button>
                             {interview.mode === "Virtual" && (
@@ -281,6 +522,15 @@ export default function Interviews() {
           </Card>
         </div>
       </div>
+
+      {/* Modal for scheduling/rescheduling interviews */}
+      <ScheduleInterviewDialog
+        open={open}
+        setOpen={setOpen}
+        editing={editing}
+        setEditing={setEditing}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 }

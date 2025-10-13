@@ -7,7 +7,11 @@ import { cn } from "@/lib/utils";
 import { LayoutDashboard, Briefcase, FileText, Users } from "lucide-react";
 import { Navbar } from "@/components/Navbar"; // your top navbar
 
-export default function StudentLayout({ children }: { children: ReactNode }) {
+export default function PlacementCellLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const pathname = usePathname();
 
   const studentLinks = [
@@ -22,14 +26,17 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      {/* ✅ Top Navbar */}
-      <Navbar />
+    <div className="flex flex-col min-h-screen bg-background overflow-hidden">
+      {/* ✅ Sticky Top Navbar */}
+      <div className="sticky top-0 z-50">
+        <Navbar role="Placement Cell" />
+      </div>
 
-      <div className="flex flex-1">
-        {/* ✅ Sidebar (desktop) */}
-        <aside className="hidden md:flex w-64 flex-col border-r bg-muted/20">
-          <nav className="flex flex-1 flex-col gap-1 p-2">
+      <div className="flex flex-1 overflow-hidden">
+        {/* ✅ Sticky Sidebar (desktop only) */}
+        <aside className="hidden md:flex flex-col w-64 border-r bg-muted/20 sticky top-0 h-[calc(100vh-64px)]">
+          {/* Adjust 64px if your Navbar height changes */}
+          <nav className="flex flex-col gap-1 p-3 overflow-y-auto">
             {studentLinks.map(({ icon: Icon, label, href }) => {
               const isActive = pathname === href;
               return (
@@ -51,12 +58,12 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
           </nav>
         </aside>
 
-        {/* ✅ Page content */}
-        <main className="flex-1 p-4">{children}</main>
+        {/* ✅ Scrollable Page Content */}
+        <main className="flex-1 overflow-y-auto p-4">{children}</main>
       </div>
 
-      {/* ✅ Bottom nav (mobile only) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t bg-background shadow-md flex justify-around py-2">
+      {/* ✅ Bottom Navbar (mobile only, fixed) */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t bg-background shadow-md flex justify-around py-2 z-50">
         {studentLinks.map(({ icon: Icon, label, href }) => {
           const isActive = pathname === href;
           return (
@@ -64,7 +71,7 @@ export default function StudentLayout({ children }: { children: ReactNode }) {
               key={href}
               href={href}
               className={cn(
-                "flex flex-col items-center text-xs",
+                "flex flex-col items-center text-xs transition-colors",
                 isActive
                   ? "text-primary font-semibold"
                   : "text-muted-foreground"
