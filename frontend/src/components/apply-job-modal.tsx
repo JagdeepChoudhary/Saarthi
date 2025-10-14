@@ -24,7 +24,7 @@ type Job = {
   type?: string;
   duration?: string;
   stipend?: string;
-  salary?: string;
+  salary?: number;
   deadline?: string;
   match?: number;
 };
@@ -45,11 +45,12 @@ export function ApplyJobModal({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
-    // Simulate submit
+
+    // Simulate async request
     setTimeout(() => {
       setSubmitting(false);
       toast.success("Application submitted", {
-        description: "Your application has been sent successfully.",
+        description: `You have successfully applied to ${job?.title} at ${job?.company}.`,
       });
       onOpenChange(false);
       onSubmitted?.();
@@ -66,16 +67,21 @@ export function ApplyJobModal({
           </DialogTitle>
           <DialogDescription>
             {job?.company
-              ? `Company: ${job.company}`
-              : "Complete the form to apply"}
+              ? `at ${job.company}`
+              : "Fill in the required details below"}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-wrap items-center gap-2 text-xs">
+        {/* Job Info Badges */}
+        <div className="flex flex-wrap items-center gap-2 text-xs mb-3">
           {job?.type && <Badge variant="secondary">{job.type}</Badge>}
           {job?.location && <Badge variant="outline">{job.location}</Badge>}
-          {(job?.stipend || job?.salary) && (
-            <Badge variant="outline">{job?.stipend || job?.salary}</Badge>
+          {job?.salary && (
+            <Badge variant="outline">
+              {job.type === "Internship"
+                ? `₹${job.salary.toLocaleString()}/month`
+                : `₹${(job.salary / 100000).toFixed(1)} LPA`}
+            </Badge>
           )}
           {job?.deadline && (
             <Badge className="bg-primary/10 text-primary">
@@ -84,27 +90,12 @@ export function ApplyJobModal({
           )}
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Full Name</Label>
-              <Input
-                id="fullName"
-                name="fullName"
-                placeholder="Your full name"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                required
-              />
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Auto-filled User Info Notice */}
+          <div className="text-sm text-muted-foreground bg-muted/40 p-3 rounded-md">
+            Your <span className="font-medium">name</span> and{" "}
+            <span className="font-medium">email</span> will be automatically
+            attached from your registered profile.
           </div>
 
           <div className="space-y-2">
@@ -113,7 +104,7 @@ export function ApplyJobModal({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="resume">Resume</Label>
+            <Label htmlFor="resume">Upload Resume</Label>
             <Input
               id="resume"
               name="resume"
@@ -121,6 +112,9 @@ export function ApplyJobModal({
               accept=".pdf,.doc,.docx"
               required
             />
+            <p className="text-xs text-muted-foreground">
+              Accepted formats: PDF, DOC, DOCX
+            </p>
           </div>
 
           <div className="space-y-2">
@@ -129,7 +123,7 @@ export function ApplyJobModal({
               id="cover"
               name="cover"
               rows={4}
-              placeholder="Briefly explain why you're a great fit"
+              placeholder="Briefly explain why you're a great fit for this role"
             />
           </div>
 
