@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 
 interface NavbarProps {
   role?: string;
@@ -31,12 +32,19 @@ export function Navbar({ role = "student" }: NavbarProps) {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => setMounted(true), []);
 
-  const handleLogout = () => router.push("/");
-
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
+
+  // Use session data if available, otherwise defaults
+  const username = session?.user?.name || "John Doe";
+  const userEmail = session?.user?.email || "john@example.com";
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 shadow-sm">
@@ -98,9 +106,9 @@ export function Navbar({ role = "student" }: NavbarProps) {
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">John Doe</p>
+                  <p className="text-sm font-medium leading-none">{username}</p>
                   <p className="text-xs text-muted-foreground leading-none">
-                    john@example.com
+                    {userEmail}
                   </p>
                 </div>
               </DropdownMenuLabel>

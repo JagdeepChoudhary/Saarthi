@@ -21,6 +21,7 @@ export default function PlacementCellLayout({
       label: "Job Openings",
       href: "/placementcell/job-openings",
     },
+    { href: "/placementcell/students", label: "All Students", icon: Users },
     { icon: Users, label: "Recruiters", href: "/placementcell/recruiters" },
     { icon: FileText, label: "Reports", href: "/placementcell/reports" },
   ];
